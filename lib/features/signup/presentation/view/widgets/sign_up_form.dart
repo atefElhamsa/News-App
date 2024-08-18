@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:news_wave/core/shared_widgets/custom_button.dart';
-import 'package:news_wave/core/shared_widgets/custom_field.dart';
-import 'package:news_wave/core/utils/app_colors.dart';
-import 'package:news_wave/core/utils/app_images.dart';
-import 'package:news_wave/core/utils/app_texts.dart';
-import 'package:news_wave/features/auth/login/presentation/view/widgets/face_or_google_login.dart';
-import 'package:news_wave/features/signup/presentation/view/signup_screen.dart';
+import 'package:news_wave/features/splash/presentation/view/splash_screen.dart';
+import '../../../../../core/shared_widgets/custom_button.dart';
+import '../../../../../core/shared_widgets/custom_field.dart';
+import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/app_images.dart';
+import '../../../../../core/utils/app_texts.dart';
+import '../../../../auth/login/presentation/view/widgets/face_or_google_login.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignUpFormState extends State<SignUpForm> {
   bool checkBox = false;
+
   var userNameKay = GlobalKey<FormState>();
+
   var passwordKay = GlobalKey<FormState>();
+  var confirmPasswordKay = GlobalKey<FormState>();
+
   TextEditingController userNameController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -27,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
     return ListView(
       children: [
         Image.asset(
-          AppImages.loginImage,
+          AppImages.signUp,
           width: MediaQuery.of(context).size.width * 0.01,
           height: MediaQuery.of(context).size.height * 0.03,
         ),
@@ -60,6 +66,23 @@ class _LoginFormState extends State<LoginForm> {
             textEditingController: passwordController,
           ),
         ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.03,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.05,
+          ),
+          child: CustomField(
+            title: AppTexts.confirmPassword,
+            suffixIcon: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.visibility),
+            ),
+            nameForKey: confirmPasswordKay,
+            textEditingController: confirmPasswordController,
+          ),
+        ),
         Row(
           children: [
             Padding(
@@ -83,21 +106,6 @@ class _LoginFormState extends State<LoginForm> {
                 fontSize: MediaQuery.of(context).size.height * 0.02,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.08),
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  AppTexts.forgotThePassword,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.mainColor.withOpacity(0.8),
-                    fontSize: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
         SizedBox(
@@ -107,14 +115,15 @@ class _LoginFormState extends State<LoginForm> {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: CustomButton(
-            title: AppTexts.login,
+            title: AppTexts.signUp,
             onPressed: () {
               if (userNameKay.currentState!.validate() &&
-                  passwordKay.currentState!.validate()) {
+                  passwordKay.currentState!.validate() &&
+                  confirmPasswordKay.currentState!.validate()) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return const SignUpScreen();
+                    return const SplashScreen();
                   }),
                 );
               }
@@ -155,15 +164,10 @@ class _LoginFormState extends State<LoginForm> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context){
-                    return const SignUpScreen();
-                  }),
-                );
+                Navigator.pop(context);
               },
               child: Text(
-                AppTexts.signUp,
+                AppTexts.login.toLowerCase(),
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                     fontWeight: FontWeight.w600,
