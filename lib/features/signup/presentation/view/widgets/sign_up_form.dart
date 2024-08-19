@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:news_wave/features/splash/presentation/view/splash_screen.dart';
+import 'package:news_wave/core/shared_widgets/custom_field_with_icon.dart';
+import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
 import '../../../../../core/shared_widgets/custom_button.dart';
-import '../../../../../core/shared_widgets/custom_field.dart';
+import '../../../../../core/shared_widgets/custom_field_without_icon.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_images.dart';
 import '../../../../../core/utils/app_texts.dart';
@@ -17,6 +18,8 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   bool checkBox = false;
+  bool passwordIsHidden = true;
+  bool confirmPasswordIsHidden = true;
 
   var userNameKay = GlobalKey<FormState>();
 
@@ -27,6 +30,19 @@ class _SignUpFormState extends State<SignUpForm> {
   TextEditingController confirmPasswordController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
+
+  OutlineInputBorder outlineInputBorder({
+    required BuildContext context,
+    required Color borderColor,
+  }) {
+    return OutlineInputBorder(
+      borderRadius:
+          BorderRadius.circular(MediaQuery.of(context).size.width * 0.02),
+      borderSide: BorderSide(
+        color: borderColor,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +59,11 @@ class _SignUpFormState extends State<SignUpForm> {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
-          child: CustomField(
+          child: CustomFieldWithoutIcon(
             title: AppTexts.username,
             nameForKey: userNameKay,
             textEditingController: userNameController,
+            errorTitle: AppTexts.errorUsername,
           ),
         ),
         SizedBox(
@@ -56,14 +73,28 @@ class _SignUpFormState extends State<SignUpForm> {
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.05,
           ),
-          child: CustomField(
+          child: CustomFieldWithIcon(
             title: AppTexts.password,
             suffixIcon: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.visibility),
+              onPressed: () {
+                setState(() {
+                  passwordIsHidden = !passwordIsHidden;
+                });
+              },
+              icon: passwordIsHidden
+                  ? const Icon(
+                      Icons.visibility,
+                      color: AppColors.mainColor,
+                    )
+                  : const Icon(
+                      Icons.visibility_off_rounded,
+                      color: AppColors.mainColor,
+                    ),
             ),
             nameForKey: passwordKay,
             textEditingController: passwordController,
+            isHidden: passwordIsHidden,
+            errorTitle: AppTexts.errorPassword,
           ),
         ),
         SizedBox(
@@ -73,14 +104,98 @@ class _SignUpFormState extends State<SignUpForm> {
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.05,
           ),
-          child: CustomField(
-            title: AppTexts.confirmPassword,
-            suffixIcon: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.visibility),
-            ),
-            nameForKey: confirmPasswordKay,
-            textEditingController: confirmPasswordController,
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: RichText(
+                  text: TextSpan(
+                    text: AppTexts.confirmPassword,
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.field,
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "*",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.astrix,
+                            fontSize: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.002,
+              ),
+              Form(
+                key: confirmPasswordKay,
+                child: TextFormField(
+                  obscureText: confirmPasswordIsHidden,
+                  obscuringCharacter: "*",
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          confirmPasswordIsHidden = !confirmPasswordIsHidden;
+                        });
+                      },
+                      icon: confirmPasswordIsHidden
+                          ? const Icon(
+                              Icons.visibility,
+                              color: AppColors.mainColor,
+                            )
+                          : const Icon(
+                              Icons.visibility_off_rounded,
+                              color: AppColors.mainColor,
+                            ),
+                    ),
+                    enabledBorder: outlineInputBorder(
+                      context: context,
+                      borderColor: AppColors.field,
+                    ),
+                    focusedBorder: outlineInputBorder(
+                      context: context,
+                      borderColor: AppColors.mainColor,
+                    ),
+                    errorBorder: outlineInputBorder(
+                      context: context,
+                      borderColor: AppColors.red,
+                    ),
+                    focusedErrorBorder: outlineInputBorder(
+                      context: context,
+                      borderColor: AppColors.mainColor,
+                    ),
+                  ),
+                  onFieldSubmitted: (value) {
+                    FocusScope.of(context).requestFocus(
+                      FocusNode(),
+                    );
+                  },
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  controller: confirmPasswordController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty == true) {
+                      return AppTexts.errorConfirmPassword;
+                    }
+                    if (value != passwordController.text) {
+                      return AppTexts.errorConfirmPassword;
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         Row(
@@ -119,11 +234,13 @@ class _SignUpFormState extends State<SignUpForm> {
             onPressed: () {
               if (userNameKay.currentState!.validate() &&
                   passwordKay.currentState!.validate() &&
-                  confirmPasswordKay.currentState!.validate()) {
+                  confirmPasswordKay.currentState!.validate() &&
+                  passwordController.text.trim() ==
+                      confirmPasswordController.text.trim()) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return const SplashScreen();
+                    return const FillProfileScreen();
                   }),
                 );
               }

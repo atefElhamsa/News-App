@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_wave/core/shared_widgets/custom_button.dart';
-import 'package:news_wave/core/shared_widgets/custom_field.dart';
+import 'package:news_wave/core/shared_widgets/custom_field_with_icon.dart';
+import 'package:news_wave/core/shared_widgets/custom_field_without_icon.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
 import 'package:news_wave/core/utils/app_images.dart';
 import 'package:news_wave/core/utils/app_texts.dart';
 import 'package:news_wave/features/auth/login/presentation/view/widgets/face_or_google_login.dart';
+import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
 import 'package:news_wave/features/signup/presentation/view/signup_screen.dart';
 
 class LoginForm extends StatefulWidget {
@@ -17,6 +19,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   bool checkBox = false;
+  bool passwordIsHidden = true;
   var userNameKay = GlobalKey<FormState>();
   var passwordKay = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
@@ -37,10 +40,11 @@ class _LoginFormState extends State<LoginForm> {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
-          child: CustomField(
+          child: CustomFieldWithoutIcon(
             title: AppTexts.username,
             nameForKey: userNameKay,
             textEditingController: userNameController,
+            errorTitle: AppTexts.errorUsername,
           ),
         ),
         SizedBox(
@@ -50,14 +54,27 @@ class _LoginFormState extends State<LoginForm> {
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.05,
           ),
-          child: CustomField(
+          child: CustomFieldWithIcon(
             title: AppTexts.password,
             suffixIcon: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.visibility),
+              onPressed: () {
+                setState(() {
+                  passwordIsHidden = !passwordIsHidden;
+                });
+              },
+              icon: passwordIsHidden
+                  ? const Icon(
+                      Icons.visibility,
+                      color: AppColors.mainColor,
+                    )
+                  : const Icon(
+                      Icons.visibility_off_rounded,
+                      color: AppColors.mainColor,
+                    ),
             ),
             nameForKey: passwordKay,
             textEditingController: passwordController,
+            isHidden: passwordIsHidden, errorTitle: AppTexts.errorPassword,
           ),
         ),
         Row(
@@ -114,7 +131,7 @@ class _LoginFormState extends State<LoginForm> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return const SignUpScreen();
+                    return const FillProfileScreen();
                   }),
                 );
               }
@@ -157,7 +174,7 @@ class _LoginFormState extends State<LoginForm> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context){
+                  MaterialPageRoute(builder: (context) {
                     return const SignUpScreen();
                   }),
                 );

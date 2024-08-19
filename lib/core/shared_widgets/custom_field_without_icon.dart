@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
 
-class CustomField extends StatelessWidget {
-  const CustomField({
+class CustomFieldWithoutIcon extends StatelessWidget {
+  const CustomFieldWithoutIcon({
     super.key,
     required this.title,
-    this.suffixIcon,
     required this.nameForKey,
     required this.textEditingController,
+    required this.errorTitle,
   });
 
   final String title;
-  final Widget? suffixIcon;
+  final String errorTitle;
   final Key nameForKey;
   final TextEditingController textEditingController;
 
@@ -52,7 +52,6 @@ class CustomField extends StatelessWidget {
           key: nameForKey,
           child: TextFormField(
             decoration: InputDecoration(
-              suffixIcon: suffixIcon,
               enabledBorder: outlineInputBorder(
                 context: context,
                 borderColor: AppColors.field,
@@ -81,7 +80,7 @@ class CustomField extends StatelessWidget {
             controller: textEditingController,
             validator: (value) {
               if (value == null || value.isEmpty == true) {
-                return "Please Fill Data";
+                return errorTitle;
               }
               return null;
             },

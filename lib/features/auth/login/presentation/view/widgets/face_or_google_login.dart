@@ -12,12 +12,13 @@ class FaceOrGoogleLogin extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        const FaceGoogleLoginWidget(
-          widget: Icon(
+        FaceGoogleLoginWidget(
+          widget: const Icon(
             Icons.facebook_rounded,
             color: AppColors.blue,
           ),
           title: AppTexts.facebook,
+          onTap: () {},
         ),
         FaceGoogleLoginWidget(
           widget: Image.asset(
@@ -25,6 +26,7 @@ class FaceOrGoogleLogin extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           title: AppTexts.google,
+          onTap: () {},
         ),
       ],
     );
