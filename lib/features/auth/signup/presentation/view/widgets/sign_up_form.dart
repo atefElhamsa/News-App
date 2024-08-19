@@ -1,10 +1,9 @@
-// ignore_for_file: use_build_context_synchronously, unused_local_variable
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_wave/core/shared_widgets/custom_field_with_icon.dart';
-import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
+import 'package:news_wave/features/auth/signup/presentation/controller/sign_up_cubit.dart';
+import 'package:news_wave/features/auth/signup/presentation/controller/sign_up_states.dart';
 
 import '../../../../../../core/shared_widgets/custom_button.dart';
 import '../../../../../../core/shared_widgets/custom_field_without_icon.dart';
@@ -244,99 +243,28 @@ class _SignUpFormState extends State<SignUpForm> {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
-          child: CustomButton(
-            title: AppTexts.signUp,
-            onPressed: () async {
-              if (emailAddressKay.currentState!.validate() &&
-                  passwordKay.currentState!.validate() &&
-                  confirmPasswordKay.currentState!.validate() &&
-                  passwordController.text.trim() ==
-                      confirmPasswordController.text.trim()) {
-                try {
-                  final credential = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                    email: emailAddressController.text.trim(),
-                    password: passwordController.text.trim(),
-                  )
-                      .then(
-                    (value) async {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            AppTexts.userAddSuccess,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.white,
-                              fontSize:
-                                  MediaQuery.of(context).size.height * 0.02,
-                            ),
-                          ),
-                          backgroundColor: AppColors.green,
-                          showCloseIcon: true,
-                          duration: const Duration(seconds: 2),
-                          closeIconColor: AppColors.white,
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                      await Future.delayed(
-                        const Duration(seconds: 2),
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return const FillProfileScreen();
-                        }),
-                      );
-                    },
-                  );
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'weak-password') {
-                    AwesomeDialog(
-                      context: context,
-                      title: 'Password Error',
-                      dialogType: DialogType.error,
-                      desc: 'The password provided is too weak.',
-                      descTextStyle: TextStyle(
-                        color: AppColors.red,
-                        fontSize: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                    ).show();
-                  } else if (e.code == 'email-already-in-use') {
-                    AwesomeDialog(
-                      context: context,
-                      title: 'Email Error',
-                      dialogType: DialogType.error,
-                      desc: 'The account already exists for that email.',
-                      descTextStyle: TextStyle(
-                        color: AppColors.red,
-                        fontSize: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                    ).show();
-                  } else {
-                    AwesomeDialog(
-                      context: context,
-                      title: 'Error',
-                      dialogType: DialogType.error,
-                      desc: e.toString(),
-                      descTextStyle: TextStyle(
-                        color: AppColors.red,
-                        fontSize: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                    ).show();
-                  }
-                } catch (e) {
-                  AwesomeDialog(
-                    context: context,
-                    title: 'Error',
-                    dialogType: DialogType.error,
-                    desc: e.toString(),
-                    descTextStyle: TextStyle(
-                      color: AppColors.red,
-                      fontSize: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                  ).show();
-                }
-              }
+          child: BlocBuilder<SignUPCubit, SignUpStates>(
+            builder: (context, state) {
+              return state is SignUpLoadingState
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : CustomButton(
+                      title: AppTexts.signUp,
+                      onPressed: () {
+                        BlocProvider.of<SignUPCubit>(context)
+                            .signUpWithFirebase(
+                          context: context,
+                          emailAddressKay: emailAddressKay,
+                          passwordKay: passwordKay,
+                          confirmPasswordKay: confirmPasswordKay,
+                          passwordText: passwordController.text.trim(),
+                          confirmPasswordText:
+                              confirmPasswordController.text.trim(),
+                          emailAddressText: emailAddressController.text.trim(),
+                        );
+                      },
+                    );
             },
           ),
         ),
