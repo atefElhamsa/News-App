@@ -75,6 +75,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           child: CustomFieldWithIcon(
             title: AppTexts.password,
+            keyboardType: TextInputType.visiblePassword,
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -139,6 +140,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Form(
                 key: confirmPasswordKay,
                 child: TextFormField(
+                  keyboardType: TextInputType.visiblePassword,
                   obscureText: confirmPasswordIsHidden,
                   obscuringCharacter: "*",
                   decoration: InputDecoration(

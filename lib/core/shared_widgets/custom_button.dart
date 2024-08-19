@@ -11,6 +11,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      minWidth: double.infinity,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           MediaQuery.of(context).size.width * 0.02,

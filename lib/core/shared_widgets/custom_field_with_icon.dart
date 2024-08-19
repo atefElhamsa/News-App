@@ -11,6 +11,7 @@ class CustomFieldWithIcon extends StatelessWidget {
     required this.textEditingController,
     required this.isHidden,
     required this.errorTitle,
+    this.keyboardType,
   });
 
   final String title;
@@ -19,6 +20,7 @@ class CustomFieldWithIcon extends StatelessWidget {
   final Key nameForKey;
   final TextEditingController textEditingController;
   final bool isHidden;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class CustomFieldWithIcon extends StatelessWidget {
         Form(
           key: nameForKey,
           child: TextFormField(
+            keyboardType: keyboardType,
             obscureText: isHidden,
             obscuringCharacter: "*",
             decoration: InputDecoration(

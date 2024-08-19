@@ -8,13 +8,14 @@ class CustomFieldWithoutIcon extends StatelessWidget {
     required this.title,
     required this.nameForKey,
     required this.textEditingController,
-    required this.errorTitle,
+    required this.errorTitle, this.keyboardType,
   });
 
   final String title;
   final String errorTitle;
   final Key nameForKey;
   final TextEditingController textEditingController;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +52,7 @@ class CustomFieldWithoutIcon extends StatelessWidget {
         Form(
           key: nameForKey,
           child: TextFormField(
+            keyboardType: keyboardType,
             decoration: InputDecoration(
               enabledBorder: outlineInputBorder(
                 context: context,

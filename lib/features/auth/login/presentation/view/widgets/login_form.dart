@@ -56,6 +56,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           child: CustomFieldWithIcon(
             title: AppTexts.password,
+            keyboardType: TextInputType.visiblePassword,
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
