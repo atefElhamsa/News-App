@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:news_wave/features/signup/presentation/view/widgets/sign_up_form.dart';
+import 'package:news_wave/features/auth/signup/presentation/view/widgets/sign_up_form.dart';
 
-import '../../../../../core/shared_widgets/logo_widget.dart';
-import '../../../../../core/utils/app_colors.dart';
+import '../../../../../../core/shared_widgets/logo_widget.dart';
+import '../../../../../../core/utils/app_colors.dart';
 
 class SignUpBody extends StatelessWidget {
   const SignUpBody({super.key});

@@ -1,13 +1,17 @@
+// ignore_for_file: use_build_context_synchronously, unused_local_variable
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_wave/core/shared_widgets/custom_field_with_icon.dart';
 import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
-import '../../../../../core/shared_widgets/custom_button.dart';
-import '../../../../../core/shared_widgets/custom_field_without_icon.dart';
-import '../../../../../core/utils/app_colors.dart';
-import '../../../../../core/utils/app_images.dart';
-import '../../../../../core/utils/app_texts.dart';
-import '../../../../auth/login/presentation/view/widgets/face_or_google_login.dart';
+
+import '../../../../../../core/shared_widgets/custom_button.dart';
+import '../../../../../../core/shared_widgets/custom_field_without_icon.dart';
+import '../../../../../../core/utils/app_colors.dart';
+import '../../../../../../core/utils/app_images.dart';
+import '../../../../../../core/utils/app_texts.dart';
+import '../../../../login/presentation/view/widgets/face_or_google_login.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -21,12 +25,12 @@ class _SignUpFormState extends State<SignUpForm> {
   bool passwordIsHidden = true;
   bool confirmPasswordIsHidden = true;
 
-  var userNameKay = GlobalKey<FormState>();
+  var emailAddressKay = GlobalKey<FormState>();
 
   var passwordKay = GlobalKey<FormState>();
   var confirmPasswordKay = GlobalKey<FormState>();
 
-  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailAddressController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
@@ -45,6 +49,14 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    emailAddressController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
@@ -60,9 +72,10 @@ class _SignUpFormState extends State<SignUpForm> {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: CustomFieldWithoutIcon(
-            title: AppTexts.username,
-            nameForKey: userNameKay,
-            textEditingController: userNameController,
+            title: AppTexts.emailAddress,
+            nameForKey: emailAddressKay,
+            keyboardType: TextInputType.emailAddress,
+            textEditingController: emailAddressController,
             errorTitle: AppTexts.errorUsername,
           ),
         ),
@@ -233,18 +246,96 @@ class _SignUpFormState extends State<SignUpForm> {
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: CustomButton(
             title: AppTexts.signUp,
-            onPressed: () {
-              if (userNameKay.currentState!.validate() &&
+            onPressed: () async {
+              if (emailAddressKay.currentState!.validate() &&
                   passwordKay.currentState!.validate() &&
                   confirmPasswordKay.currentState!.validate() &&
                   passwordController.text.trim() ==
                       confirmPasswordController.text.trim()) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const FillProfileScreen();
-                  }),
-                );
+                try {
+                  final credential = await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                    email: emailAddressController.text.trim(),
+                    password: passwordController.text.trim(),
+                  )
+                      .then(
+                    (value) async {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            AppTexts.userAddSuccess,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.white,
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 0.02,
+                            ),
+                          ),
+                          backgroundColor: AppColors.green,
+                          showCloseIcon: true,
+                          duration: const Duration(seconds: 2),
+                          closeIconColor: AppColors.white,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                      await Future.delayed(
+                        const Duration(seconds: 2),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const FillProfileScreen();
+                        }),
+                      );
+                    },
+                  );
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'weak-password') {
+                    AwesomeDialog(
+                      context: context,
+                      title: 'Password Error',
+                      dialogType: DialogType.error,
+                      desc: 'The password provided is too weak.',
+                      descTextStyle: TextStyle(
+                        color: AppColors.red,
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                    ).show();
+                  } else if (e.code == 'email-already-in-use') {
+                    AwesomeDialog(
+                      context: context,
+                      title: 'Email Error',
+                      dialogType: DialogType.error,
+                      desc: 'The account already exists for that email.',
+                      descTextStyle: TextStyle(
+                        color: AppColors.red,
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                    ).show();
+                  } else {
+                    AwesomeDialog(
+                      context: context,
+                      title: 'Error',
+                      dialogType: DialogType.error,
+                      desc: e.toString(),
+                      descTextStyle: TextStyle(
+                        color: AppColors.red,
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                    ).show();
+                  }
+                } catch (e) {
+                  AwesomeDialog(
+                    context: context,
+                    title: 'Error',
+                    dialogType: DialogType.error,
+                    desc: e.toString(),
+                    descTextStyle: TextStyle(
+                      color: AppColors.red,
+                      fontSize: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                  ).show();
+                }
               }
             },
           ),

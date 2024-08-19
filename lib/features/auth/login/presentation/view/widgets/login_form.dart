@@ -8,7 +8,8 @@ import 'package:news_wave/core/utils/app_images.dart';
 import 'package:news_wave/core/utils/app_texts.dart';
 import 'package:news_wave/features/auth/login/presentation/view/widgets/face_or_google_login.dart';
 import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
-import 'package:news_wave/features/signup/presentation/view/signup_screen.dart';
+
+import '../../../../signup/presentation/view/signup_screen.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -20,10 +21,17 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   bool checkBox = false;
   bool passwordIsHidden = true;
-  var userNameKay = GlobalKey<FormState>();
+  var emailAddressKay = GlobalKey<FormState>();
   var passwordKay = GlobalKey<FormState>();
-  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailAddressController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailAddressController.dispose();
+    passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +49,10 @@ class _LoginFormState extends State<LoginForm> {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: CustomFieldWithoutIcon(
-            title: AppTexts.username,
-            nameForKey: userNameKay,
-            textEditingController: userNameController,
+            title: AppTexts.emailAddress,
+            nameForKey: emailAddressKay,
+            keyboardType: TextInputType.emailAddress,
+            textEditingController: emailAddressController,
             errorTitle: AppTexts.errorUsername,
           ),
         ),
@@ -75,7 +84,8 @@ class _LoginFormState extends State<LoginForm> {
             ),
             nameForKey: passwordKay,
             textEditingController: passwordController,
-            isHidden: passwordIsHidden, errorTitle: AppTexts.errorPassword,
+            isHidden: passwordIsHidden,
+            errorTitle: AppTexts.errorPassword,
           ),
         ),
         Row(
@@ -127,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
           child: CustomButton(
             title: AppTexts.login,
             onPressed: () {
-              if (userNameKay.currentState!.validate() &&
+              if (emailAddressKay.currentState!.validate() &&
                   passwordKay.currentState!.validate()) {
                 Navigator.push(
                   context,

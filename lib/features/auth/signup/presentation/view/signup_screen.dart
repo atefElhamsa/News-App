@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
-import 'package:news_wave/features/signup/presentation/view/widgets/sign_up_body.dart';
+import 'package:news_wave/features/auth/signup/presentation/view/widgets/sign_up_body.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});

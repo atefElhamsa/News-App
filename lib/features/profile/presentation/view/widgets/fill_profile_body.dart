@@ -24,6 +24,14 @@ class _FillProfileBodyState extends State<FillProfileBody> {
   TextEditingController phoneNumberController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    fullNameController.dispose();
+    emailAddressController.dispose();
+    phoneNumberController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
@@ -92,7 +100,8 @@ class _FillProfileBodyState extends State<FillProfileBody> {
             height: MediaQuery.of(context).size.height * 0.1,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.05),
             child: CustomButton(
               title: AppTexts.next,
               onPressed: () {

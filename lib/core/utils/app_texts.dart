@@ -22,4 +22,5 @@ class AppTexts {
   static const String fullName = "Full Name";
   static const String emailAddress = "Email Address";
   static const String phoneNumber = "Phone Number";
+  static const String userAddSuccess = "User Added Successfully";
 }
