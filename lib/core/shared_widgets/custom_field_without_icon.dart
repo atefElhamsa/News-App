@@ -8,7 +8,8 @@ class CustomFieldWithoutIcon extends StatelessWidget {
     required this.title,
     required this.nameForKey,
     required this.textEditingController,
-    required this.errorTitle, this.keyboardType,
+    required this.errorTitle,
+    this.keyboardType,
   });
 
   final String title;

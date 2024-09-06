@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,7 @@ import '../../../../../../core/shared_widgets/custom_field_without_icon.dart';
 import '../../../../../../core/utils/app_colors.dart';
 import '../../../../../../core/utils/app_images.dart';
 import '../../../../../../core/utils/app_texts.dart';
+import '../../../../../profile/presentation/view/fill_profile_screen.dart';
 import '../../../../login/presentation/view/widgets/face_or_google_login.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -243,7 +245,53 @@ class _SignUpFormState extends State<SignUpForm> {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
-          child: BlocBuilder<SignUPCubit, SignUpStates>(
+          child: BlocConsumer<SignUpCubit, SignUpStates>(
+            listener: (context, state) async {
+              if (state is SignUpFailureState) {
+                AwesomeDialog(
+                  context: context,
+                  title: state.errorMessage,
+                  dialogType: DialogType.error,
+                  desc: state.errorMessage == 'weak-password'
+                      ? 'The password provided is too weak.'
+                      : state.errorMessage == 'email-already-in-use'
+                          ? 'The account already exists for that email.'
+                          : 'Error',
+                  descTextStyle: TextStyle(
+                    color: AppColors.red,
+                    fontSize: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                ).show();
+              }
+              else if(state is SignUpSuccessState){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppTexts.userAddSuccess,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                    ),
+                    backgroundColor: AppColors.green,
+                    showCloseIcon: true,
+                    duration: const Duration(seconds: 2),
+                    closeIconColor: AppColors.white,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                await Future.delayed(
+                  const Duration(seconds: 2),
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const FillProfileScreen();
+                  }),
+                );
+              }
+            },
             builder: (context, state) {
               return state is SignUpLoadingState
                   ? const Center(
@@ -252,7 +300,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   : CustomButton(
                       title: AppTexts.signUp,
                       onPressed: () {
-                        BlocProvider.of<SignUPCubit>(context)
+                        BlocProvider.of<SignUpCubit>(context)
                             .signUpWithFirebase(
                           context: context,
                           emailAddressKay: emailAddressKay,
