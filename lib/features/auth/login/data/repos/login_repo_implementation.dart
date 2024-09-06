@@ -2,29 +2,28 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_wave/core/errors/failure.dart';
-import 'package:news_wave/features/auth/signup/data/repos/signup_repo.dart';
+import 'package:news_wave/features/auth/login/data/repos/login_repo.dart';
 
-class SignUpFirebaseImplementation extends SignUpRepo {
+class LoginFirebaseImplementation extends LoginRepo {
   @override
-  Future<Either<Failure, void>> signUp(
+  Future<Either<Failure, void>> login(
       {required String email,
       required String pas,
       required BuildContext context}) async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: pas,
       );
       return right(null);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
+      if (e.code == 'user-not-found') {
         return left(
-          FirebaseFailure(message: 'weak-password'),
+          FirebaseFailure(message: 'user-not-found'),
         );
-      } else if (e.code == 'email-already-in-use') {
+      } else if (e.code == 'wrong-password') {
         return left(
-          FirebaseFailure(message: 'email-already-in-use'),
+          FirebaseFailure(message: 'wrong-password'),
         );
       } else {
         return left(

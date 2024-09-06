@@ -1,4 +1,6 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_wave/core/shared_widgets/custom_button.dart';
 import 'package:news_wave/core/shared_widgets/custom_field_with_icon.dart';
@@ -6,6 +8,8 @@ import 'package:news_wave/core/shared_widgets/custom_field_without_icon.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
 import 'package:news_wave/core/utils/app_images.dart';
 import 'package:news_wave/core/utils/app_texts.dart';
+import 'package:news_wave/features/auth/login/presentation/controller/login_cubit.dart';
+import 'package:news_wave/features/auth/login/presentation/controller/login_states.dart';
 import 'package:news_wave/features/auth/login/presentation/view/widgets/face_or_google_login.dart';
 import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
 
@@ -134,11 +138,24 @@ class _LoginFormState extends State<LoginForm> {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
-          child: CustomButton(
-            title: AppTexts.login,
-            onPressed: () {
-              if (emailAddressKay.currentState!.validate() &&
-                  passwordKay.currentState!.validate()) {
+          child: BlocConsumer<LoginCubit, LoginStates>(
+            listener: (context, state) async {
+              if (state is LoginFailureState) {
+                AwesomeDialog(
+                  context: context,
+                  title: state.errorMessage,
+                  dialogType: DialogType.error,
+                  desc: state.errorMessage == 'user-not-found'
+                      ? 'No user found for that email.'
+                      : state.errorMessage == 'wrong-password'
+                          ? 'Wrong password provided for that user.'
+                          : 'Error',
+                  descTextStyle: TextStyle(
+                    color: AppColors.red,
+                    fontSize: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                ).show();
+              } else if (state is LoginSuccessState) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
@@ -146,6 +163,24 @@ class _LoginFormState extends State<LoginForm> {
                   }),
                 );
               }
+            },
+            builder: (context, state) {
+              return state is LoginLoadingState
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : CustomButton(
+                      title: AppTexts.login,
+                      onPressed: () {
+                        BlocProvider.of<LoginCubit>(context).loginWithFirebase(
+                          context: context,
+                          emailAddressKay: emailAddressKay,
+                          passwordKay: passwordKay,
+                          passwordText: passwordController.text.trim(),
+                          emailAddressText: emailAddressController.text.trim(),
+                        );
+                      },
+                    );
             },
           ),
         ),

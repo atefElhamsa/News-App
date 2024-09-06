@@ -262,8 +262,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     fontSize: MediaQuery.of(context).size.height * 0.02,
                   ),
                 ).show();
-              }
-              else if(state is SignUpSuccessState){
+              } else if (state is SignUpSuccessState) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
