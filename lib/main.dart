@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
 import 'package:news_wave/features/splash/presentation/view/splash_screen.dart';
 import 'firebase_options.dart';
 
@@ -18,7 +19,7 @@ class NewsWave extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: FillProfileScreen(),
     );
   }
 }

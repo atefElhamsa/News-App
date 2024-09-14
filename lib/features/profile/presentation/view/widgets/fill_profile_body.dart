@@ -1,12 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:news_wave/core/shared_widgets/custom_field_without_icon.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
 import 'package:news_wave/core/utils/app_texts.dart';
-import 'package:news_wave/features/auth/login/presentation/view/login_screen.dart';
-import 'package:news_wave/features/profile/presentation/view/widgets/select_photo.dart';
-
 import '../../../../../core/shared_widgets/custom_button.dart';
+import '../../../../home/presentation/view/home_screen.dart';
 
 class FillProfileBody extends StatefulWidget {
   const FillProfileBody({super.key});
@@ -22,6 +25,18 @@ class _FillProfileBodyState extends State<FillProfileBody> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
+
+  final ImagePicker picker = ImagePicker();
+
+  XFile? image;
+
+  pickPhoto(ImageSource imageSource) async {
+    image = await picker.pickImage(source: imageSource);
+    if (image != null) {
+      Navigator.pop(context);
+    }
+    setState(() {});
+  }
 
   @override
   void dispose() {
@@ -54,7 +69,114 @@ class _FillProfileBodyState extends State<FillProfileBody> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.03,
           ),
-          const SelectPhoto(),
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: AppColors.white,
+                builder: (context) {
+                  return Padding(
+                    padding: EdgeInsets.all(
+                      MediaQuery.of(context).size.height * 0.03,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              pickPhoto(ImageSource.gallery);
+                            },
+                            child: SizedBox(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.photo_size_select_actual,
+                                    size: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    color: AppColors.mainColor,
+                                  ),
+                                  Text(
+                                    AppTexts.gallery,
+                                    style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                      color: AppColors.mainColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              pickPhoto(ImageSource.camera);
+                            },
+                            child: SizedBox(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.add_a_photo,
+                                    size: MediaQuery.of(context).size.height *
+                                        0.05,
+                                    color: AppColors.mainColor,
+                                  ),
+                                  Text(
+                                    AppTexts.camera,
+                                    style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                      color: AppColors.mainColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            child: CircleAvatar(
+              radius: MediaQuery.of(context).size.width * 0.23,
+              backgroundColor: AppColors.transparent,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.21,
+                width: MediaQuery.of(context).size.width * 0.5,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                      MediaQuery.of(context).size.width * 0.24),
+                  border: Border.all(
+                    color: AppColors.mainColor,
+                  ),
+                ),
+                child: image == null
+                    ? Icon(
+                        Icons.add_a_photo,
+                        color: AppColors.mainColor,
+                        size: MediaQuery.of(context).size.height * 0.05,
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            MediaQuery.of(context).size.width * 0.23),
+                        child: Image.file(
+                          File(
+                            image!.path,
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+              ),
+            ),
+          ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.03,
           ),
@@ -108,12 +230,96 @@ class _FillProfileBodyState extends State<FillProfileBody> {
                 if (fullNameKey.currentState!.validate() &&
                     emailAddressKey.currentState!.validate() &&
                     phoneNumberKey.currentState!.validate()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return const LoginScreen();
-                    }),
-                  );
+                  if (image == null) {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: AppColors.white,
+                      builder: (context) {
+                        return Padding(
+                          padding: EdgeInsets.all(
+                            MediaQuery.of(context).size.height * 0.03,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    pickPhoto(ImageSource.gallery);
+                                  },
+                                  child: SizedBox(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.photo_size_select_actual,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.05,
+                                          color: AppColors.mainColor,
+                                        ),
+                                        Text(
+                                          AppTexts.gallery,
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.02,
+                                            color: AppColors.mainColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    pickPhoto(ImageSource.camera);
+                                  },
+                                  child: SizedBox(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.add_a_photo,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.05,
+                                          color: AppColors.mainColor,
+                                        ),
+                                        Text(
+                                          AppTexts.camera,
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.02,
+                                            color: AppColors.mainColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return HomeScreen(
+                          image: image,
+                        );
+                      }),
+                    );
+                  }
                 }
               },
             ),

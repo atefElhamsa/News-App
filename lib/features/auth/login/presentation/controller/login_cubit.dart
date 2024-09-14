@@ -20,8 +20,8 @@ class LoginCubit extends Cubit<LoginStates> {
         emit(LoginLoadingState());
         var result = await loginRepo.login(
           context: context,
-          email: emailAddressText,
-          pas: passwordText,
+          email: emailAddressText.trim(),
+          pas: passwordText.trim(),
         );
         result.fold(
           (l) {

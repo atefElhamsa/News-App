@@ -149,7 +149,7 @@ class _LoginFormState extends State<LoginForm> {
                       ? 'No user found for that email.'
                       : state.errorMessage == 'wrong-password'
                           ? 'Wrong password provided for that user.'
-                          : 'Error',
+                          : 'Email Or Password InCorrect',
                   descTextStyle: TextStyle(
                     color: AppColors.red,
                     fontSize: MediaQuery.of(context).size.height * 0.02,
