@@ -54,7 +54,7 @@ class HomeRepoImplementationFromApi implements HomeRepo {
     try {
       var response = await http.get(
         Uri.parse(
-          "${EndPoints.baseUrl}${EndPoints.searchAboutNews}q=$q&apiKey=${EndPoints.apiKey}",
+          "${EndPoints.baseUrl}${EndPoints.searchAboutNews}?q=$q&apiKey=${EndPoints.apiKey}",
         ),
       );
       if (response.statusCode == 200) {

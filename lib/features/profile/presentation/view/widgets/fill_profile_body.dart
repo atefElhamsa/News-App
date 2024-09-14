@@ -9,7 +9,7 @@ import 'package:news_wave/core/shared_widgets/custom_field_without_icon.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
 import 'package:news_wave/core/utils/app_texts.dart';
 import '../../../../../core/shared_widgets/custom_button.dart';
-import '../../../../home/presentation/view/home_screen.dart';
+import '../../../../home/presentation/view/home_bottom.dart';
 
 class FillProfileBody extends StatefulWidget {
   const FillProfileBody({super.key});
@@ -314,7 +314,7 @@ class _FillProfileBodyState extends State<FillProfileBody> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return HomeScreen(
+                        return HomeBottom(
                           image: image,
                         );
                       }),
