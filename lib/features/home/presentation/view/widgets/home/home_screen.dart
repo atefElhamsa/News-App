@@ -72,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                         : ListViewForNews(
                             news: BlocProvider.of<GetTopHeadLineCubit>(context)
-                                .topHeadLine),
+                                .topHeadLine,
+                ),
               );
             },
           ),

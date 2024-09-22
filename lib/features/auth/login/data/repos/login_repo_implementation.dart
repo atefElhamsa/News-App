@@ -6,10 +6,11 @@ import 'package:news_wave/features/auth/login/data/repos/login_repo.dart';
 
 class LoginFirebaseImplementation extends LoginRepo {
   @override
-  Future<Either<Failure, void>> login(
-      {required String email,
-      required String pas,
-      required BuildContext context}) async {
+  Future<Either<Failure, void>> login({
+    required String email,
+    required String pas,
+    required BuildContext context,
+  }) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -19,15 +20,15 @@ class LoginFirebaseImplementation extends LoginRepo {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return left(
-          FirebaseFailure(message: 'user-not-found'),
+          FirebaseFailure(message: 'Error'),
         );
       } else if (e.code == 'wrong-password') {
         return left(
-          FirebaseFailure(message: 'wrong-password'),
+          FirebaseFailure(message: 'Error'),
         );
       } else {
         return left(
-          FirebaseFailure(message: 'error'),
+          FirebaseFailure(message: 'Error'),
         );
       }
     } catch (e) {

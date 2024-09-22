@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_wave/features/home/data/repos/home_repo_implementation.dart';
 import 'package:news_wave/features/splash/presentation/view/splash_screen.dart';
+import 'features/home/presentation/controller/get_top_head_line/get_top_head_line_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -8,7 +11,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const NewsWave());
+  runApp(
+    BlocProvider(
+      create: (context) => GetTopHeadLineCubit(
+        homeRepo: HomeRepoImplementationFromApi(),
+      ),
+      child: const NewsWave(),
+    ),
+  );
 }
 
 class NewsWave extends StatelessWidget {

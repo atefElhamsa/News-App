@@ -19,6 +19,11 @@ class AppTexts {
   static const String fillYourProfile = "Fill your Profile";
   static const String gallery = "Gallery";
   static const String camera = "Camera";
+  static const String technology = "technology";
+  static const String sport = "sports";
+  static const String science = "science";
+  static const String general = "general";
+  static const String business = "business";
   static const String fullName = "Full Name";
   static const String emailAddress = "Email Address";
   static const String phoneNumber = "Phone Number";

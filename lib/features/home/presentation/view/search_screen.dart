@@ -58,16 +58,17 @@ class SearchBody extends StatelessWidget {
                   );
                 },
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          MediaQuery.of(context).size.width * 0.02),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: AppColors.mainColor),
-                      borderRadius: BorderRadius.circular(
-                          MediaQuery.of(context).size.width * 0.02),
-                    ),
-                    hintText: "Search"),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                        MediaQuery.of(context).size.width * 0.02),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: AppColors.mainColor),
+                    borderRadius: BorderRadius.circular(
+                        MediaQuery.of(context).size.width * 0.02),
+                  ),
+                  hintText: "Search",
+                ),
               ),
             ),
             Expanded(

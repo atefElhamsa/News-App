@@ -252,11 +252,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   context: context,
                   title: state.errorMessage,
                   dialogType: DialogType.error,
-                  desc: state.errorMessage == 'weak-password'
-                      ? 'The password provided is too weak.'
-                      : state.errorMessage == 'email-already-in-use'
-                          ? 'The account already exists for that email.'
-                          : 'Error',
+                  desc: 'Error',
                   descTextStyle: TextStyle(
                     color: AppColors.red,
                     fontSize: MediaQuery.of(context).size.height * 0.02,
