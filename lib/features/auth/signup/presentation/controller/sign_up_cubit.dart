@@ -8,7 +8,6 @@ class SignUpCubit extends Cubit<SignUpStates> {
   final SignUpRepo signUpRepo;
 
   Future<void> signUpWithFirebase({
-    required context,
     required var emailAddressKay,
     required var passwordKay,
     required var confirmPasswordKay,
@@ -25,7 +24,6 @@ class SignUpCubit extends Cubit<SignUpStates> {
         var result = await signUpRepo.signUp(
           email: emailAddressText,
           pas: passwordText,
-          context: context,
         );
         result.fold(
           (l) {

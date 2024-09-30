@@ -26,6 +26,9 @@ class _FillProfileBodyState extends State<FillProfileBody> {
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
 
+  var emailNode = FocusNode();
+  var phoneNode = FocusNode();
+
   final ImagePicker picker = ImagePicker();
 
   XFile? image;
@@ -188,6 +191,11 @@ class _FillProfileBodyState extends State<FillProfileBody> {
               nameForKey: fullNameKey,
               textEditingController: fullNameController,
               errorTitle: AppTexts.errorUsername,
+              onFieldSubmitted: (p0) {
+                FocusScope.of(context).requestFocus(
+                  emailNode,
+                );
+              },
             ),
           ),
           SizedBox(
@@ -198,10 +206,16 @@ class _FillProfileBodyState extends State<FillProfileBody> {
                 horizontal: MediaQuery.of(context).size.width * 0.05),
             child: CustomFieldWithoutIcon(
               title: AppTexts.emailAddress,
+              focusNode: emailNode,
               keyboardType: TextInputType.emailAddress,
               nameForKey: emailAddressKey,
               textEditingController: emailAddressController,
               errorTitle: AppTexts.errorEmail,
+              onFieldSubmitted: (p0) {
+                FocusScope.of(context).requestFocus(
+                  phoneNode,
+                );
+              },
             ),
           ),
           SizedBox(
@@ -212,6 +226,12 @@ class _FillProfileBodyState extends State<FillProfileBody> {
                 horizontal: MediaQuery.of(context).size.width * 0.05),
             child: CustomFieldWithoutIcon(
               title: AppTexts.phoneNumber,
+              focusNode: phoneNode,
+              onFieldSubmitted: (p0) {
+                FocusScope.of(context).requestFocus(
+                  FocusNode(),
+                );
+              },
               nameForKey: phoneNumberKey,
               keyboardType: TextInputType.phone,
               textEditingController: phoneNumberController,

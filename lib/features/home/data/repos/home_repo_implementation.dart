@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:news_wave/core/errors/failure.dart';
 import 'package:news_wave/core/utils/end_points.dart';

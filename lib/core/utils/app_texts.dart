@@ -23,6 +23,7 @@ class AppTexts {
   static const String sport = "sports";
   static const String science = "science";
   static const String general = "general";
+  static const String entertainment = "entertainment";
   static const String business = "business";
   static const String fullName = "Full Name";
   static const String emailAddress = "Email Address";

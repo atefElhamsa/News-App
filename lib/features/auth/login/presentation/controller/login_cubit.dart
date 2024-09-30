@@ -8,7 +8,6 @@ class LoginCubit extends Cubit<LoginStates> {
   final LoginRepo loginRepo;
 
   Future<void> loginWithFirebase({
-    required context,
     required var emailAddressKay,
     required var passwordKay,
     required String passwordText,
@@ -19,9 +18,8 @@ class LoginCubit extends Cubit<LoginStates> {
           passwordKay.currentState!.validate()) {
         emit(LoginLoadingState());
         var result = await loginRepo.login(
-          context: context,
-          email: emailAddressText.trim(),
-          pas: passwordText.trim(),
+          email: emailAddressText,
+          pas: passwordText,
         );
         result.fold(
           (l) {

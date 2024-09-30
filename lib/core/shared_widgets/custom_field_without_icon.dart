@@ -3,13 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
 
 class CustomFieldWithoutIcon extends StatelessWidget {
-  const CustomFieldWithoutIcon({
+  CustomFieldWithoutIcon({
     super.key,
     required this.title,
     required this.nameForKey,
     required this.textEditingController,
     required this.errorTitle,
     this.keyboardType,
+    this.focusNode,
+    required this.onFieldSubmitted,
   });
 
   final String title;
@@ -17,6 +19,8 @@ class CustomFieldWithoutIcon extends StatelessWidget {
   final Key nameForKey;
   final TextEditingController textEditingController;
   final TextInputType? keyboardType;
+  FocusNode? focusNode;
+  void Function(String) ? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +58,7 @@ class CustomFieldWithoutIcon extends StatelessWidget {
           key: nameForKey,
           child: TextFormField(
             keyboardType: keyboardType,
+            focusNode: focusNode,
             decoration: InputDecoration(
               enabledBorder: outlineInputBorder(
                 context: context,
@@ -72,11 +77,7 @@ class CustomFieldWithoutIcon extends StatelessWidget {
                 borderColor: AppColors.mainColor,
               ),
             ),
-            onFieldSubmitted: (value) {
-              FocusScope.of(context).requestFocus(
-                FocusNode(),
-              );
-            },
+            onFieldSubmitted: onFieldSubmitted,
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus?.unfocus();
             },

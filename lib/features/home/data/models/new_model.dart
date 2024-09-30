@@ -1,4 +1,6 @@
-class NewModel {
+import 'package:equatable/equatable.dart';
+
+class NewModel extends Equatable {
   final String? title;
   final String? description;
   final String? content;
@@ -6,6 +8,7 @@ class NewModel {
   final String? urlToImage;
   final String? publishedAt;
   final SourceModel sourceModel;
+  bool bookMark;
 
   NewModel({
     required this.title,
@@ -15,15 +18,33 @@ class NewModel {
     required this.urlToImage,
     required this.publishedAt,
     required this.sourceModel,
+    this.bookMark = false,
   });
+
+  @override
+  List<Object?> get props => [
+        title,
+        description,
+        content,
+        url,
+        urlToImage,
+        publishedAt,
+        sourceModel,
+      ];
 }
 
-class SourceModel {
+class SourceModel extends Equatable {
   final String? id;
   final String? name;
 
-  SourceModel({
+  const SourceModel({
     required this.id,
     required this.name,
   });
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+      ];
 }

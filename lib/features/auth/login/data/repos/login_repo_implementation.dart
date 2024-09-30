@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:news_wave/core/errors/failure.dart';
 import 'package:news_wave/features/auth/login/data/repos/login_repo.dart';
 
@@ -9,12 +8,11 @@ class LoginFirebaseImplementation extends LoginRepo {
   Future<Either<Failure, void>> login({
     required String email,
     required String pas,
-    required BuildContext context,
   }) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: pas,
+      UserCredential credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: pas.trim(),
       );
       return right(null);
     } on FirebaseAuthException catch (e) {

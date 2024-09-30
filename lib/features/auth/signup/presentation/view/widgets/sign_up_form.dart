@@ -26,6 +26,9 @@ class _SignUpFormState extends State<SignUpForm> {
   bool passwordIsHidden = true;
   bool confirmPasswordIsHidden = true;
 
+  var passwordNode = FocusNode();
+  var confirmPasswordNode = FocusNode();
+
   var emailAddressKay = GlobalKey<FormState>();
 
   var passwordKay = GlobalKey<FormState>();
@@ -33,7 +36,6 @@ class _SignUpFormState extends State<SignUpForm> {
 
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
 
   OutlineInputBorder outlineInputBorder({
@@ -78,6 +80,11 @@ class _SignUpFormState extends State<SignUpForm> {
             keyboardType: TextInputType.emailAddress,
             textEditingController: emailAddressController,
             errorTitle: AppTexts.errorUsername,
+            onFieldSubmitted: (p0) {
+              FocusScope.of(context).requestFocus(
+                passwordNode,
+              );
+            },
           ),
         ),
         SizedBox(
@@ -89,6 +96,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           child: CustomFieldWithIcon(
             title: AppTexts.password,
+            focusNode: passwordNode,
             keyboardType: TextInputType.visiblePassword,
             suffixIcon: IconButton(
               onPressed: () {
@@ -110,6 +118,11 @@ class _SignUpFormState extends State<SignUpForm> {
             textEditingController: passwordController,
             isHidden: passwordIsHidden,
             errorTitle: AppTexts.errorPassword,
+            onFieldSubmitted: (p0) {
+              FocusScope.of(context).requestFocus(
+                confirmPasswordNode,
+              );
+            },
           ),
         ),
         SizedBox(
@@ -154,6 +167,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Form(
                 key: confirmPasswordKay,
                 child: TextFormField(
+                  focusNode: confirmPasswordNode,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: confirmPasswordIsHidden,
                   obscuringCharacter: "*",
@@ -297,7 +311,6 @@ class _SignUpFormState extends State<SignUpForm> {
                       onPressed: () {
                         BlocProvider.of<SignUpCubit>(context)
                             .signUpWithFirebase(
-                          context: context,
                           emailAddressKay: emailAddressKay,
                           passwordKay: passwordKay,
                           confirmPasswordKay: confirmPasswordKay,

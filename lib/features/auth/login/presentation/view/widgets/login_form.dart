@@ -26,6 +26,7 @@ class _LoginFormState extends State<LoginForm> {
   bool checkBox = false;
   bool passwordIsHidden = true;
   var emailAddressKay = GlobalKey<FormState>();
+  var passwordNode = FocusNode();
   var passwordKay = GlobalKey<FormState>();
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -54,6 +55,11 @@ class _LoginFormState extends State<LoginForm> {
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: CustomFieldWithoutIcon(
             title: AppTexts.emailAddress,
+            onFieldSubmitted: (p0) {
+              FocusScope.of(context).requestFocus(
+                passwordNode,
+              );
+            },
             nameForKey: emailAddressKay,
             keyboardType: TextInputType.emailAddress,
             textEditingController: emailAddressController,
@@ -69,6 +75,12 @@ class _LoginFormState extends State<LoginForm> {
           ),
           child: CustomFieldWithIcon(
             title: AppTexts.password,
+            focusNode: passwordNode,
+            onFieldSubmitted: (p0) {
+              FocusScope.of(context).requestFocus(
+                FocusNode(),
+              );
+            },
             keyboardType: TextInputType.visiblePassword,
             suffixIcon: IconButton(
               onPressed: () {
@@ -115,18 +127,15 @@ class _LoginFormState extends State<LoginForm> {
                 fontSize: MediaQuery.of(context).size.height * 0.02,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.08),
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  AppTexts.forgotThePassword,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.mainColor.withOpacity(0.8),
-                    fontSize: MediaQuery.of(context).size.height * 0.02,
-                  ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                AppTexts.forgotThePassword,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.mainColor.withOpacity(0.8),
+                  fontSize: MediaQuery.of(context).size.height * 0.02,
                 ),
               ),
             ),
@@ -137,7 +146,8 @@ class _LoginFormState extends State<LoginForm> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.05),
+            horizontal: MediaQuery.of(context).size.width * 0.05,
+          ),
           child: BlocConsumer<LoginCubit, LoginStates>(
             listener: (context, state) async {
               if (state is LoginFailureState) {
@@ -145,11 +155,7 @@ class _LoginFormState extends State<LoginForm> {
                   context: context,
                   title: state.errorMessage,
                   dialogType: DialogType.error,
-                  desc: state.errorMessage == 'user-not-found'
-                      ? 'No user found for that email.'
-                      : state.errorMessage == 'wrong-password'
-                          ? 'Wrong password provided for that user.'
-                          : 'Email Or Password InCorrect',
+                  desc: 'Email Or Password InCorrect',
                   descTextStyle: TextStyle(
                     color: AppColors.red,
                     fontSize: MediaQuery.of(context).size.height * 0.02,
@@ -172,8 +178,7 @@ class _LoginFormState extends State<LoginForm> {
                   : CustomButton(
                       title: AppTexts.login,
                       onPressed: () {
-                        BlocProvider.of<LoginCubit>(context).loginWithFirebase(
-                          context: context,
+                        BlocProvider.of<LoginCubit>(context,listen: false).loginWithFirebase(
                           emailAddressKay: emailAddressKay,
                           passwordKay: passwordKay,
                           passwordText: passwordController.text.trim(),

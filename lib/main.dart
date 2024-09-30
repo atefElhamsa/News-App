@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_wave/features/home/data/repos/home_repo_implementation.dart';
-import 'package:news_wave/features/splash/presentation/view/splash_screen.dart';
+import 'package:news_wave/features/home/presentation/controller/book_mark_cubit/book_mark_cubit.dart';
+import 'package:news_wave/features/profile/presentation/view/fill_profile_screen.dart';
 import 'features/home/presentation/controller/get_top_head_line/get_top_head_line_cubit.dart';
 import 'firebase_options.dart';
 
@@ -12,10 +13,17 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    BlocProvider(
-      create: (context) => GetTopHeadLineCubit(
-        homeRepo: HomeRepoImplementationFromApi(),
-      ),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => GetTopHeadLineCubit(
+            homeRepo: HomeRepoImplementationFromApi(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => BookMarkCubit(),
+        ),
+      ],
       child: const NewsWave(),
     ),
   );
@@ -28,7 +36,7 @@ class NewsWave extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: FillProfileScreen(),
     );
   }
 }

@@ -1,20 +1,19 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:news_wave/core/errors/failure.dart';
 import 'package:news_wave/features/auth/signup/data/repos/signup_repo.dart';
 
 class SignUpFirebaseImplementation extends SignUpRepo {
   @override
-  Future<Either<Failure, void>> signUp(
-      {required String email,
-      required String pas,
-      required BuildContext context}) async {
+  Future<Either<Failure, void>> signUp({
+    required String email,
+    required String pas,
+  }) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: pas,
+        email: email.trim(),
+        password: pas.trim(),
       );
       return right(null);
     } on FirebaseAuthException catch (e) {

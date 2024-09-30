@@ -8,7 +8,12 @@ class GetTopHeadLineCubit extends Cubit<GetTopHeadLineStates> {
       : super(GetTopHeadLineInitialStates());
   final HomeRepo homeRepo;
   List<NewModel> topHeadLine = [];
-  Future<void> getTopHeadLine({String category = "technology"}) async {
+  Map<int, List<NewModel>> mapForNews = {};
+  Future<void> getTopHeadLine({
+    String category = "technology",
+    int index = 0,
+    required List<NewModel> bookMarksList,
+  }) async {
     emit(GetTopHeadLineLoadingStates());
     var result = await homeRepo.getTopHeadLine(category: category);
     result.fold(
@@ -19,6 +24,15 @@ class GetTopHeadLineCubit extends Cubit<GetTopHeadLineStates> {
       },
       (r) {
         topHeadLine = r;
+        topHeadLine = topHeadLine.map(
+          (newsItem) {
+            if (bookMarksList.any((bookMark) => bookMark == newsItem)) {
+              newsItem.bookMark = true;
+            }
+            return newsItem;
+          },
+        ).toList();
+        mapForNews.addAll({index: topHeadLine});
         emit(GetTopHeadLineSuccessStates());
       },
     );
