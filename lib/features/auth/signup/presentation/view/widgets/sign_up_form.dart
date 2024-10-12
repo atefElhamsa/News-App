@@ -266,7 +266,11 @@ class _SignUpFormState extends State<SignUpForm> {
                   context: context,
                   title: state.errorMessage,
                   dialogType: DialogType.error,
-                  desc: 'Error',
+                  desc: state.errorMessage == "weak-password"
+                      ? "This Password is weak"
+                      : state.errorMessage == "email-already-in-use"
+                          ? "This email is exist"
+                          : "Error",
                   descTextStyle: TextStyle(
                     color: AppColors.red,
                     fontSize: MediaQuery.of(context).size.height * 0.02,
@@ -293,12 +297,14 @@ class _SignUpFormState extends State<SignUpForm> {
                 await Future.delayed(
                   const Duration(seconds: 2),
                 );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const FillProfileScreen();
-                  }),
-                );
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return const FillProfileScreen();
+                    }),
+                  );
+                }
               }
             },
             builder: (context, state) {

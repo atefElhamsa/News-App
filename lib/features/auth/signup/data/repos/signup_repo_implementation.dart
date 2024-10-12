@@ -12,8 +12,8 @@ class SignUpFirebaseImplementation extends SignUpRepo {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email.trim(),
-        password: pas.trim(),
+        email: email,
+        password: pas,
       );
       return right(null);
     } on FirebaseAuthException catch (e) {

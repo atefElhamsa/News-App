@@ -6,6 +6,8 @@ import 'package:news_wave/features/home/data/models/new_model.dart';
 import 'package:news_wave/features/home/data/repos/home_repo.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/source_model.dart';
+
 class HomeRepoImplementationFromApi implements HomeRepo {
   @override
   Future<Either<Failure, List<NewModel>>> getTopHeadLine(

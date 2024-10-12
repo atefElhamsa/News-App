@@ -14,7 +14,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
     required String passwordText,
     required String confirmPasswordText,
     required String emailAddressText,
-  }) async {
+  })  async {
     {
       if (emailAddressKay.currentState!.validate() &&
           passwordKay.currentState!.validate() &&

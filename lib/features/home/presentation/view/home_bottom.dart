@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_wave/core/utils/app_colors.dart';
 import 'package:news_wave/core/utils/app_images.dart';
+import 'package:news_wave/features/home/presentation/controller/book_mark_cubit/book_mark_cubit.dart';
 import 'package:news_wave/features/home/presentation/view/book_marks_screen.dart';
 import 'package:news_wave/features/home/presentation/view/widgets/home/home_screen.dart';
 
@@ -17,6 +19,11 @@ class HomeBottom extends StatefulWidget {
 
 class _HomeBottomState extends State<HomeBottom> {
   int currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<BookMarkCubit>(context).fetchBookMarks();
+  }
 
   final List<Widget> screensHome = [
     const HomeScreen(),

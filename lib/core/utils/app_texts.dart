@@ -29,4 +29,5 @@ class AppTexts {
   static const String emailAddress = "Email Address";
   static const String phoneNumber = "Phone Number";
   static const String userAddSuccess = "User Added Successfully";
+  static const String bookMarkBox = "bookMarkBox";
 }
