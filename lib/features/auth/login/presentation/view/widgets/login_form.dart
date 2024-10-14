@@ -178,7 +178,7 @@ class _LoginFormState extends State<LoginForm> {
                   : CustomButton(
                       title: AppTexts.login,
                       onPressed: () {
-                        BlocProvider.of<LoginCubit>(context,listen: false).loginWithFirebase(
+                        BlocProvider.of<LoginCubit>(context).loginWithFirebase(
                           emailAddressKay: emailAddressKay,
                           passwordKay: passwordKay,
                           passwordText: passwordController.text.trim(),

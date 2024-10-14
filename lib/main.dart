@@ -48,3 +48,4 @@ class NewsWave extends StatelessWidget {
     );
   }
 }
+
